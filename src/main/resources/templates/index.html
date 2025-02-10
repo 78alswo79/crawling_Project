@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>가격 비교</title>
+</head>
+<body>
+    <h1>가격 비교 웹 애플리케이션</h1>
+    <form action="/compare.do" method="get">
+        <input type="text" name="productName" placeholder="제품 이름 입력" required>
+        <button type="submit">비교하기</button>
+    </form>
+
+    <h2>가격 비교 결과</h2>
+    <table>
+        <tr>
+            <th>제품 이름</th>
+            <th>가격</th>
+            <th>사이트</th>
+        </tr>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.site}"></td>
+        </tr>
+    </table>
+</body>
+</html>
