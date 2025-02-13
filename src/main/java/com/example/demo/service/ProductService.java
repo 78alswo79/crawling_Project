@@ -138,14 +138,15 @@ public class ProductService {
                     
                 	
                 	// 내가 짠 소스
-                	for (Element root : doc.select("#container")) {
-                		//System.out.println(root);
-                		for (Element productListRoot : root.children()) {
-                			for (Element titleRoot : productListRoot.children()) {
-                				titleRoot.child(0).text();
-                			}
-                		}
-                	}
+                	Elements rootPrdItems = doc.select("div[id=container] > div > div > div > div");
+					for (Element rootPrdItem : rootPrdItems) {
+						rootPrdItem.select(".thumbnail_thumb_wrap__RbcYO a img");
+					}
+
+
+
+
+
                 	
                 	// 뤼튼이 짠 소스
 					Elements productItems = doc.select("div[id=container] > div");
