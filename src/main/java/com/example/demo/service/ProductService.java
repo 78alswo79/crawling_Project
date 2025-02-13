@@ -21,38 +21,6 @@ public class ProductService {
 	 * @return ??
 	 * 
 	 * */
-	// container   		root엘리먼트
-	// resultSummary_result_info__Y1J4V		검색결과 el
-	// basicList_list_basis__uNBZx			상품 결과 el
-	// adProduct_item__1zC9h
-//	public List<ProductVO> getCompareProduct(List<String> paramList, String productName) {
-//		List<ProductVO> list = new ArrayList<>();
-//		
-//		try {
-//			String url = "";
-//			if (paramList.size() >= 2) {
-//				url = "https://search.shopping.naver.com/search/all?query=" + paramList.get(1) + "&prevQuery=" + paramList.get(0) + "&vertical=search";
-//			} else { url = "https://search.shopping.naver.com/search/all?where=all&frm=NVSCTAB&query=" + paramList.get(0); }
-//			
-//			Document doc1 = Jsoup.connect(url).get();
-//			
-//			for (Element el : doc1.select("#container")) {
-//				String resultProduct = el.select(".resultSummary_result_info__Y1J4V").text();
-//				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>" + resultProduct);
-//				for (Element divTag : el.select(".adProduct_item__1zC9h")) {
-//					System.out.println(divTag.select("a < img"));
-//					
-//				}
-//				
-//			}
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
-//		return list;
-//	}
-	
-	// thumbnail_thumb_wrap__RbcYO _wrapper 썸네일 영역
-	
 	public List<ProductVO> getCompareProduct(List<String> paramList, String productName) {
 	    List<ProductVO> list = new ArrayList<>();
 	    ExecutorService executor = Executors.newFixedThreadPool(4);
@@ -67,102 +35,77 @@ public class ProductService {
             }
             
             // test
-            String html = "<div id = \"container\">\r\n"
-            		+ "    <div class=\"adProduct_item__1zC9h adProduct_no_bg__NVZ3e\">\r\n"
-            		+ "        <div>\r\n"
-            		+ "            <div>\r\n"
-            		+ "                title = title1\r\n"
-            		+ "            </div>\r\n"
-            		+ "            <div>\r\n"
-            		+ "                <a>\r\n"
-            		+ "                    div > a > img<img src=\"http://gimozziHan.haru.com1\"/>\r\n"
-            		+ "                </a>\r\n"
-            		+ "            </div>\r\n"
-            		+ "            <div>\r\n"
-            		+ "                div3\r\n"
-            		+ "            </div>\r\n"
-            		+ "        </div>\r\n"
-            		+ "    </div>\r\n"
-            		+ "    <div class=\"product_item__MDtDF\">\r\n"
-            		+ "        <div>\r\n"
-            		+ "            <div>\r\n"
-            		+ "                title = title2\r\n"
-            		+ "            </div>\r\n"
-            		+ "            <div>\r\n"
-            		+ "                <a>\r\n"
-            		+ "                    div > a > img<img src=\"http://gimozziHan.haru.com2\"/>\r\n"
-            		+ "                </a>\r\n"
-            		+ "            </div>\r\n"
-            		+ "            <div>\r\n"
-            		+ "                div3\r\n"
-            		+ "            </div>\r\n"
-            		+ "        </div>\r\n"
-            		+ "    </div>\r\n"
-            		+ "    <div class=\"superSavingProduct_item__ziVFy\">\r\n"
-            		+ "        <div>\r\n"
-            		+ "            <div>\r\n"
-            		+ "                title = title3\r\n"
-            		+ "            </div>\r\n"
-            		+ "            <div>\r\n"
-            		+ "                <a>\r\n"
-            		+ "                    div > a > img<img src=\"http://gimozziHan.haru.com3\"/>\r\n"
-            		+ "                </a>\r\n"
-            		+ "            </div>\r\n"
-            		+ "            <div>\r\n"
-            		+ "                div3\r\n"
-            		+ "            </div>\r\n"
-            		+ "        </div>\r\n"
-            		+ "    </div>\r\n"
-            		+ "</div>";
-            // ".adProduct_item__1zC9h, .product_item__MDtDF"
+//            String html = "<div id = \"container\">\r\n"
+//            		+ "    <div class=\"adProduct_item__1zC9h adProduct_no_bg__NVZ3e\">\r\n"
+//            		+ "        <div>\r\n"
+//            		+ "            <div>\r\n"
+//            		+ "                title = title1\r\n"
+//            		+ "            </div>\r\n"
+//            		+ "            <div>\r\n"
+//            		+ "                <a>\r\n"
+//            		+ "                    div > a > img<img src=\"http://gimozziHan.haru.com1\"/>\r\n"
+//            		+ "                </a>\r\n"
+//            		+ "            </div>\r\n"
+//            		+ "            <div>\r\n"
+//            		+ "                div3\r\n"
+//            		+ "            		<div>\r\n"
+//					+ "                		div3\r\n"
+//					+ "                 </div>\r\n"
+//            		+ "            </div>\r\n"
+//            		+ "        </div>\r\n"
+//            		+ "    </div>\r\n"
+//            		+ "    <div class=\"product_item__MDtDF\">\r\n"
+//            		+ "        <div>\r\n"
+//            		+ "            <div>\r\n"
+//            		+ "                title = title2\r\n"
+//            		+ "            </div>\r\n"
+//            		+ "            <div>\r\n"
+//            		+ "                <a>\r\n"
+//            		+ "                    div > a > img<img src=\"http://gimozziHan.haru.com2\"/>\r\n"
+//            		+ "                </a>\r\n"
+//            		+ "            </div>\r\n"
+//            		+ "            <div>\r\n"
+//            		+ "                div3\r\n"
+//            		+ "            </div>\r\n"
+//            		+ "        </div>\r\n"
+//            		+ "    </div>\r\n"
+//            		+ "    <div class=\"superSavingProduct_item__ziVFy\">\r\n"
+//            		+ "        <div>\r\n"
+//            		+ "            <div>\r\n"
+//            		+ "                title = title3\r\n"
+//            		+ "            </div>\r\n"
+//            		+ "            <div>\r\n"
+//            		+ "                <a>\r\n"
+//            		+ "                    div > a > img<img src=\"http://gimozziHan.haru.com3\"/>\r\n"
+//            		+ "                </a>\r\n"
+//            		+ "            </div>\r\n"
+//            		+ "            <div>\r\n"
+//            		+ "                div3\r\n"
+//            		+ "            </div>\r\n"
+//            		+ "        </div>\r\n"
+//            		+ "    </div>\r\n"
+//            		+ "</div>";
             executor.submit(() -> {
                 try {
-//                    Document doc = Jsoup.connect(url).get();
-                	Document doc = Jsoup.parse(html);
+                    Document doc = Jsoup.connect(url).get();
+//                	Document doc = Jsoup.parse(html);
                 	
-//                    Elements el = doc.select("#container .resultSummary_result_info__Y1J4V");
-//                    String resProductName = el.text();
-//                    System.out.println(resProductName);
-//                    
-//                    for (Element divRoot : doc.selectXpath("//*[@id=\"content\"]/div[1]/div[2]/div")) {
-//                    	//System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + divRoot.children());
-//                    	Elements itemRoot = divRoot.children();
-//                    	
-//                    	for (var i = 0; i < itemRoot.size(); i++) {
-//                    		Element lowstDiv = itemRoot.get(i).lastElementChild();
-//                    		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>dddddd" + lowstDiv);
-//                    	}
-//                    }
+                    Elements el = doc.select("#container .resultSummary_result_info__Y1J4V");
+                    String searchRes = el.text();
+                    System.out.println(searchRes);
                     
-                    // 쿠팡쪽도 url연결해주기
-                    
-                	
-                	// 내가 짠 소스
-                	Elements rootPrdItems = doc.select("div[id=container] > div > div > div > div");
-					for (Element rootPrdItem : rootPrdItems) {
-						rootPrdItem.select(".thumbnail_thumb_wrap__RbcYO a img");
-					}
-
-
-
-
-
-                	
-                	// 뤼튼이 짠 소스
-					Elements productItems = doc.select("div[id=container] > div");
-					for (Element item : productItems) {
-					    // title 추출
-						String title = item.select("div > div").first().text().replace("title = ", "").trim();
-						// 이미지 소스 추출
-						String imgSrc = item.select("a > img").attr("src");
+                    // 네이버 쇼핑은 너무 복잡하다.
+                	Elements rootPrdItems = doc.select("div[id=container] div[id=content] div.basicList_list_basis__uNBZx > div > div");
+                							
+                	for (Element rootPrdItem : rootPrdItems) {
+                		// Css선택자 너무 헷갈리기는 한다. 공부하기 좋은
+						String prdTitle = rootPrdItem.select("div > div > div:nth-of-type(2) > div > a").text();
+						String prdPrice = rootPrdItem.select("div > div > div:nth-of-type(2) > div:nth-of-type(2) span:nth-of-type(1) > span:nth-of-type(1)").text();
 						
-						// 결과 출력
-						System.out.println("Title: " + title);
-						System.out.println("Image Source: " + imgSrc);
-					    System.out.println();
-					}
-                	
-                	
+						System.out.println(prdTitle);
+						System.out.println(prdPrice);
+					}	
+                	// TODO 쿠팡쪽도 url연결해주기
                 	
                 } catch (Exception e) {
                     e.printStackTrace(); // 예외 발생 시 스택 트레이스 출력

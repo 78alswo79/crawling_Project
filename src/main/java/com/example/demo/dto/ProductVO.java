@@ -16,13 +16,10 @@ public class ProductVO {
 	@Setter
 	private int price;
 	
-	@Getter
-	@Setter
-	private String imgSrc;
 
 	@Override
 	public String toString() {
-		return "ProductVO [title=" + title + ", price=" + price + ", imgSrc=" + imgSrc + "]";
+		return "ProductVO [title=" + title + ", price=" + price + "]";
 	}
 	
 	
