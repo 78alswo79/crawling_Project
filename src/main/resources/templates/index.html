@@ -10,18 +10,21 @@
         <button type="submit">비교하기</button>
     </form>
 
-    <h2>가격 비교 결과</h2>
-    <table>
-        <tr>
-            <th>제품 이름</th>
-            <th>가격</th>
-            <th>사이트</th>
-        </tr>
-        <tr th:each="product : ${products}">
-            <td th:text="${product.name}"></td>
-            <td th:text="${product.price}"></td>
-            <td th:text="${product.site}"></td>
-        </tr>
-    </table>
+    <div th:if="${not #lists.isEmpty(naverProductList)}">
+        <h2>가격 비교 결과</h2>
+        <table>
+            <tr>
+                <th>제품 이름</th>
+                <th>가격</th>
+            </tr>
+            <tr th:each="product : ${naverProductList}">
+                <td th:text="${product.title}"></td>
+                <td th:text="${product.price}"></td>
+            </tr>
+        </table>
+    </div>
+    <div th:else>
+        <h2>데이터가 없습니다.</h2>
+    </div>
 </body>
 </html>
