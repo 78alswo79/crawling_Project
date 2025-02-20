@@ -207,7 +207,7 @@ import com.example.demo.dto.ProductVO;
 @EnableAsync
 public class ProductService {
 
-    private List<ProductVO> naverList = Collections.synchronizedList(new ArrayList<>()); // 스레드 안전한 리스트
+    private List<ProductVO> naverList = Collections.synchronizedList(new ArrayList<>()); 	// 스레드 안전한 리스트
     private List<ProductVO> coupangList = Collections.synchronizedList(new ArrayList<>());
 
     public ModelAndView comparePrices(List<String> paramList, String productName) {
@@ -218,16 +218,18 @@ public class ProductService {
         CompletableFuture<List<ProductVO>> naverFuture = CompletableFuture.supplyAsync(() -> getNaverProductList(paramList, productName));
         
         // Coupang 제품 목록을 가져오는 작업 제출
-        //CompletableFuture<List<ProductVO>> coupangFuture = CompletableFuture.supplyAsync(() -> getCoupangProductList(productName));
+        CompletableFuture<List<ProductVO>> coupangFuture = CompletableFuture.supplyAsync(() -> getCoupangProductList(productName));
         
         try {
             // 결과를 가져옴
             List<ProductVO> naverProducts = naverFuture.join(); // join()은 블로킹 호출이지만, CompletableFuture를 사용하여 비동기적으로 처리
-            //List<ProductVO> coupangProducts = coupangFuture.join();
+            List<ProductVO> coupangProducts = coupangFuture.join();
 
             // 결과를 ModelAndView에 추가
             mav.addObject("naverProductList", naverProducts);
             //mav.addObject("coupangProductList", coupangProducts);
+            
+            System.out.println("naverProductList>>>>>" + naverProducts.toString());
             
         } catch (Exception e) {
             e.printStackTrace(); // 예외 처리
@@ -248,42 +250,24 @@ public class ProductService {
         url = "https://books.toscrape.com/catalogue/category/books/horror_31/index.html";
 
         try {
-            // read timeout 설정
-            Document doc = Jsoup.connect(url).timeout(10000).get(); // 타임아웃 설정
-            String searchResult = doc.select(".col-sm-8.col-md-9 > div").text();
-            
-            for (Element root : doc.select(".col-sm-8.col-md-9")) {
-            	String detailHref = root.select("ol.row li div a").attr("href");
-            	String imgSrc = root.select("ol.row li div a img").attr("src");
-            	String rowStarRating = root.select("ol.row li .star-rating").attr("class");
-            	String bookPrice = root.select("ol.row li div:nth-of-type(2) .price_color").text();
-            	String bookTitle = root.select("ol.row li h3").text();
-            	// 이어서 진행하기
-            }
-
-            Elements rootPrdItems = doc.select("div[id=container] div[id=content] div.basicList_list_basis__uNBZx > div > div");
-            naverList = setProductList(rootPrdItems);
+        	
+        	Document doc = Jsoup.connect(url).timeout(10000).get(); // 타임아웃 설정
+            naverList = setBooksList(doc);
             
         } catch (Exception e) {
             e.printStackTrace(); // 예외 발생 시 스택 트레이스 출력
         }
-
         return naverList;
     }
 
     public List<ProductVO> getCoupangProductList(String productName) {
         List<ProductVO> resList = new ArrayList<>();
-        String url = "https://www.coupang.com/np/search?component=&q=" + productName + "&channel=user";
+        String url = "https://www.goodreads.com/search?utf8=%E2%9C%93&q=Horror&search_type=books";
         
         try {
             // read timeout 설정
             Document doc = Jsoup.connect(url).get(); // 타임아웃 설정
-            String searchRes = doc.select("#contents .hit-count").text();
-            System.out.println("쿠팡의 검색 결과는?????" + searchRes);
-
-            //Elements productListRoot = doc.select("ul#productList");
-            //Elements rootPrdItems = doc.select("div[id=container] div[id=content] div.basicList_list_basis__uNBZx > div > div");
-            //coupangList = setProductList(rootPrdItems);
+            // TODO 이어서하기
             
         } catch (Exception e) {
             e.printStackTrace(); // 예외 발생 시 스택 트레이스 출력
@@ -302,23 +286,34 @@ public class ProductService {
         return returnList;
     }
 
-    private List<ProductVO> setProductList(Elements rootPrdItems) {
+    private List<ProductVO> setBooksList(Document doc) {
         List<ProductVO> resList = new ArrayList<>();
 
-        for (Element rootPrdItem : rootPrdItems) {
-            String prdTitle = rootPrdItem.select("div > div > div:nth-of-type(2) > div > a").text();
-            String prdPrice = rootPrdItem.select("div > div > div:nth-of-type(2) > div:nth-of-type(2) span:nth-of-type(1) > span:nth-of-type(1)").text();
-            
-            int price = 0;
-            try {
-                price = Integer.parseInt(prdPrice.replaceAll("[^0-9]", ""));
-            } catch (NumberFormatException e) {
-                System.err.println("가격 변환 오류: " + prdPrice);
-            }
-            resList.add(new ProductVO(prdTitle, price));
+        String searchResult = doc.select(".col-sm-8.col-md-9 > div").text();
+
+        for (Element liRoot : doc.select(".col-sm-8.col-md-9 ol.row li")) {
+        	String detailHref = liRoot.select("div a").attr("href");
+        	String imgSrc = liRoot.select("div a img").attr("src");
+        	String rowStarRating = liRoot.select(".star-rating").attr("class");
+        	String bookPrice = liRoot.select("div:nth-of-type(2) .price_color").text();
+        	String bookTitle = liRoot.select("h3").text();
+        	
+        	String customStarRating = "";
+        	// bookPrice 가공. 숫자가 아니면 ""처리한다.
+        	int customBookPrice = Integer.parseInt(bookPrice.replaceAll("[^0-9]", ""));
+        	// rowStartRating 가공
+        	if (rowStarRating.contains("One")) customStarRating = "1점";
+        	if (rowStarRating.contains("Two")) customStarRating = "2점";
+        	if (rowStarRating.contains("Three")) customStarRating = "3점";
+        	if (rowStarRating.contains("Four")) customStarRating = "4점";
+        	if (rowStarRating.contains("Five")) customStarRating = "5점";
+        	
+        	resList.add(new ProductVO(bookTitle, customBookPrice, imgSrc, searchResult, customStarRating, detailHref));
         }
         return resList;
     }
+    
+    
 }
 
 
