@@ -2,6 +2,74 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>가격 비교</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #999;
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
     <h1>가격 비교 웹 애플리케이션</h1>
@@ -10,29 +78,54 @@
         <button type="submit">비교하기</button>
     </form>
 
-    <div th:if="${not #lists.isEmpty(naverProductList)}">
+    <div th:if="${not #lists.isEmpty(booksProducts1)}">
         <h2>가격 비교 결과</h2>
         <table>
             <tr>
-                <th>제품 이름</th>
+                <th>제품이름</th>
                 <th>가격</th>
-				<th>이미지 소스</th>
-				<th>검색 결과</th>
-				<th>별점</th>
-				<th>상세 링크 소스</th>
+                <th>이미지 소스</th>
+                <th>검색 결과</th>
+                <th>별점</th>
+                <th>상세 링크 소스</th>
             </tr>
-            <tr th:each="product : ${naverProductList}">
+            <tr th:each="product : ${booksProducts1}">
                 <td th:text="${product.bookTitle}"></td>
                 <td th:text="${product.bookprice}"></td>
-				<td th:text="${product.imgSrc}"></td>
-				<td th:text="${product.searchResult}"></td>
-				<td th:text="${product.customStarRating}"></td>
-				<td th:text="${product.detailHref}"></td>
+                <td th:text="${product.imgSrc}"></td>
+                <td th:text="${product.searchResult}"></td>
+                <td th:text="${product.customStarRating}"></td>
+                <td th:text="${product.detailHref}"></td>
             </tr>
         </table>
     </div>
     <div th:else>
-        <h2>데이터가 없습니다.</h2>
+        <h2 class="no-data">데이터가 없습니다.</h2>
+    </div>
+
+    <div th:if="${not #lists.isEmpty(booksProducts2)}">
+        <h2>가격 비교 결과</h2>
+        <table>
+            <tr>
+                <th>제품이름</th>
+                <th>가격</th>
+                <th>이미지 소스</th>
+                <th>검색 결과</th>
+                <th>별점</th>
+                <th>상세 링크 소스</th>
+            </tr>
+            <tr th:each="product : ${booksProducts2}">
+                <td th:text="${product.bookTitle}"></td>
+                <td th:text="${product.bookprice}"></td>
+                <td th:text="${product.imgSrc}"></td>
+                <td th:text="${product.searchResult}"></td>
+                <td th:text="${product.customStarRating}"></td>
+                <td th:text="${product.detailHref}"></td>
+            </tr>
+        </table>
+    </div>
+    <div th:else>
+        <h2 class="no-data">데이터가 없습니다.</h2>
     </div>
 </body>
 </html>
