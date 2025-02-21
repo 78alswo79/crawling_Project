@@ -207,29 +207,30 @@ import com.example.demo.dto.ProductVO;
 @EnableAsync
 public class ProductService {
 
-    private List<ProductVO> naverList = Collections.synchronizedList(new ArrayList<>()); 	// 스레드 안전한 리스트
-    private List<ProductVO> coupangList = Collections.synchronizedList(new ArrayList<>());
+    private List<ProductVO> bookList1 = Collections.synchronizedList(new ArrayList<>()); 	// 스레드 안전한 리스트
+    private List<ProductVO> bookList2 = Collections.synchronizedList(new ArrayList<>());
 
     public ModelAndView comparePrices(List<String> paramList, String productName) {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("index");
 
         // Naver 제품 목록을 가져오는 작업 제출
-        CompletableFuture<List<ProductVO>> naverFuture = CompletableFuture.supplyAsync(() -> getNaverProductList(paramList, productName));
+        CompletableFuture<List<ProductVO>> naverFuture = CompletableFuture.supplyAsync(() -> getBookList1(paramList, productName));
         
         // Coupang 제품 목록을 가져오는 작업 제출
-        CompletableFuture<List<ProductVO>> coupangFuture = CompletableFuture.supplyAsync(() -> getCoupangProductList(productName));
+        CompletableFuture<List<ProductVO>> coupangFuture = CompletableFuture.supplyAsync(() -> getBookList2(productName));
         
         try {
             // 결과를 가져옴
-            List<ProductVO> naverProducts = naverFuture.join(); // join()은 블로킹 호출이지만, CompletableFuture를 사용하여 비동기적으로 처리
-            List<ProductVO> coupangProducts = coupangFuture.join();
+            List<ProductVO> booksProducts1 = naverFuture.join(); // join()은 블로킹 호출이지만, CompletableFuture를 사용하여 비동기적으로 처리
+            List<ProductVO> booksProducts2 = coupangFuture.join();
 
             // 결과를 ModelAndView에 추가
-            mav.addObject("naverProductList", naverProducts);
-            //mav.addObject("coupangProductList", coupangProducts);
+            mav.addObject("booksProducts1", booksProducts1);
+            mav.addObject("booksProducts2", booksProducts2);
             
-            System.out.println("naverProductList>>>>>" + naverProducts.toString());
+            System.out.println("booksProducts1>>>>>" + booksProducts1.toString());
+            System.out.println("booksProducts2>>>>>" + booksProducts2.toString());
             
         } catch (Exception e) {
             e.printStackTrace(); // 예외 처리
@@ -238,42 +239,36 @@ public class ProductService {
         return mav; // ModelAndView 반환
     }
 
-    public List<ProductVO> getNaverProductList(List<String> paramList, String productName) {
+    public List<ProductVO> getBookList1(List<String> paramList, String productName) {
         List<ProductVO> resList = new ArrayList<>();
         String url;
-
-//        if (paramList.size() >= 2) {
-//            url = "https://search.shopping.naver.com/search/all?query=" + paramList.get(1) + "&prevQuery=" + paramList.get(0) + "&vertical=search";
-//        } else {
-//            url = "https://search.shopping.naver.com/search/all?where=all&frm=NVSCTAB&query=" + productName;
-//        }
         url = "https://books.toscrape.com/catalogue/category/books/horror_31/index.html";
 
         try {
         	
         	Document doc = Jsoup.connect(url).timeout(10000).get(); // 타임아웃 설정
-            naverList = setBooksList(doc);
+        	bookList1 = setBooksList1(doc);
             
         } catch (Exception e) {
             e.printStackTrace(); // 예외 발생 시 스택 트레이스 출력
         }
-        return naverList;
+        return bookList1;
     }
 
-    public List<ProductVO> getCoupangProductList(String productName) {
+    public List<ProductVO> getBookList2(String productName) {
         List<ProductVO> resList = new ArrayList<>();
         String url = "https://www.goodreads.com/search?utf8=%E2%9C%93&q=Horror&search_type=books";
         
         try {
             // read timeout 설정
             Document doc = Jsoup.connect(url).get(); // 타임아웃 설정
-            // TODO 이어서하기
+            bookList2 = setBooksList2(doc);
             
         } catch (Exception e) {
             e.printStackTrace(); // 예외 발생 시 스택 트레이스 출력
         }
 
-        return coupangList;
+        return bookList2;
     }
 
     public List<String> setProductName(List<String> returnList, String productName) {
@@ -286,7 +281,7 @@ public class ProductService {
         return returnList;
     }
 
-    private List<ProductVO> setBooksList(Document doc) {
+    private List<ProductVO> setBooksList1(Document doc) {
         List<ProductVO> resList = new ArrayList<>();
 
         String searchResult = doc.select(".col-sm-8.col-md-9 > div").text();
@@ -310,6 +305,28 @@ public class ProductService {
         	
         	resList.add(new ProductVO(bookTitle, customBookPrice, imgSrc, searchResult, customStarRating, detailHref));
         }
+        return resList;
+    }
+    
+    private List<ProductVO> setBooksList2(Document doc) {
+        List<ProductVO> resList = new ArrayList<>();
+
+        for(Element trRoot : doc.select("div.leftContainer .tableList tr")) {
+        	
+        	String detailHref = trRoot.select("a").attr("href");
+        	String imgSrc = trRoot.select("a img").attr("src");
+        	String rowStarRating = trRoot.select("td:nth-of-type(2) div > span > span").text(); // 가공 필요
+//        	String bookPrice = liRoot.select("div:nth-of-type(2) .price_color").text();
+        	String bookTitle = trRoot.select("td:nth-of-type(2) > a > span").text();
+        	
+        	String customStarRating = "";
+        	String strArr[] = rowStarRating.split("-");
+        	customStarRating = strArr[0].split(" ")[0];
+        	
+        	resList.add(new ProductVO(bookTitle, 0, imgSrc, bookTitle, customStarRating, detailHref));
+        }
+
+        
         return resList;
     }
     
