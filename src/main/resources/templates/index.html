@@ -92,7 +92,7 @@
             <tr th:each="product : ${booksProducts1}">
                 <td th:text="${product.bookTitle}"></td>
                 <td th:text="${product.bookprice}"></td>
-                <td th:text="${product.imgSrc}"></td>
+                <td><img th:src="@{${product.imgSrc}}" th:alt="${product.imgSrc}" th:title="${product.imgSrc}"/></td>
                 <td th:text="${product.searchResult}"></td>
                 <td th:text="${product.customStarRating}"></td>
                 <td th:text="${product.detailHref}"></td>
@@ -117,7 +117,7 @@
             <tr th:each="product : ${booksProducts2}">
                 <td th:text="${product.bookTitle}"></td>
                 <td th:text="${product.bookprice}"></td>
-                <td th:text="${product.imgSrc}"></td>
+                <td><img th:src="@{${product.imgSrc}}" th:alt="${product.imgSrc}" th:title="${product.imgSrc}"/></td>
                 <td th:text="${product.searchResult}"></td>
                 <td th:text="${product.customStarRating}"></td>
                 <td th:text="${product.detailHref}"></td>

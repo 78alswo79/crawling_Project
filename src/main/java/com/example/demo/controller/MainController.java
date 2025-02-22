@@ -38,13 +38,8 @@ ProductService productService;
 		if (request.getParameter("productName").isBlank() || request.getParameter("productName") == null) throw new Exception("parameter is NULL!!!!");
 		
 		List<String> resList = productService.setProductName(setList, productName);
-		//List<ProductVO> naverPrdList = productService.getNaverProductList(resList, productName);
-		//List<ProductVO> coupangPrdList = productService.getCoupangProductList(productName);
 		
 		mav = productService.comparePrices(resList, productName);
-		
-		//mav.addObject("naverProductList", naverPrdList);
-		// 쿠팡 productList set해주기
 		return mav;
 	}
 }
