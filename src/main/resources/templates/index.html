@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>가격 비교</title>
+    <title>도서 사이트 비교</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -72,14 +72,14 @@
     </style>
 </head>
 <body>
-    <h1>가격 비교 웹 애플리케이션</h1>
+    <h1>도서 사이트 비교 애플리케이션</h1>
     <form action="/compare.do" method="get">
         <input type="text" name="productName" placeholder="제품 이름 입력" required>
         <button type="submit">비교하기</button>
     </form>
 
     <div th:if="${not #lists.isEmpty(booksProducts1)}">
-        <h2>가격 비교 결과</h2>
+        <h2>결과</h2>
         <table>
             <tr>
                 <th>제품이름</th>
@@ -104,7 +104,7 @@
     </div>
 
     <div th:if="${not #lists.isEmpty(booksProducts2)}">
-        <h2>가격 비교 결과</h2>
+        <h2>결과</h2>
         <table>
             <tr>
                 <th>제품이름</th>
