@@ -73,11 +73,6 @@
 </head>
 <body>
     <h1>도서 사이트 비교 애플리케이션</h1>
-    <form action="/compare.do" method="get">
-        <input type="text" name="productName" placeholder="제품 이름 입력" required>
-        <button type="submit">비교하기</button>
-    </form>
-
     <div th:if="${not #lists.isEmpty(booksProducts1)}">
         <h2>결과</h2>
         <table>
